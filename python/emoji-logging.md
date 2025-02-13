@@ -1,8 +1,23 @@
 
-# Pyvider Logging Emoji Matrix
+# pyvider/rpcplugin/types.py
 
-**Summary:** Use 3-emoji prefixes for log categorization.  [Domain] → [Action] → [Status]
+from typing import TypeVar, TypeAlias, Protocol, Any, Dict, Union
+from grpc.aio import Server as GRPCServer
 
-D: 🛎️: Server, 🙋: Client, 🔌: Plugin, 🌐: TCP, 📞: Unix, 🤝: Handshake, 🔐: Security, ⚙️: Config, 📡: Protocol, 🧰: Utils, ❗: Exception, 🛰️: Telemetry, 💉: DI
-A: 🚀: Start, 🤝: Handshake, 🕵️: Connect, 🕹: Listen, 📖: Read, 📤: Write, 📥: Receive, 🔒: Close, 🔍: Parse, 📝: Build, 🔁: Retry, 🧪: Test, 📜: Cert, 🔑: Key, 🛡️: Encrypt
-S: ✅: Success, ❌: Error, 🚫: Fail, ⚠️: Warn, 🛑: Stop, 👍: Affirm, 👀: Monitor, 💥: Crash, ⭕: None, ⏸️: Suspend, ▶️: Resume, ⏳: Pending, 💤: Idle, 🔄: Ongoing
+# Core Protocol Types
+class SerializableT(Protocol):
+    """Protocol for objects that can be serialized to/from dict."""
+    def to_dict(self) -> Dict[str, Any]: ...
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'SerializableT': ...
+
+# Core Type Variables
+ConfigT = TypeVar('ConfigT', bound='RPCPluginConfig')
+HandlerT = TypeVar('HandlerT', bound='RPCPluginHandler')
+ProtocolT = TypeVar('ProtocolT', bound='RPCPluginProtocol')
+TransportT = TypeVar('TransportT', bound='RPCPluginTransport')
+ServerT = TypeVar('ServerT', bound=GRPCServer)
+
+# Common Return Types
+ResultT = TypeVar('ResultT')
+ErrorT = TypeVar('ErrorT', bound=Exception)
